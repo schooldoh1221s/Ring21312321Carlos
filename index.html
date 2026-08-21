@@ -6361,11 +6361,27 @@
       }
     }
 
-    // Open localhost when Continue is clicked
+    // Open the same site from a local web server when Continue is clicked.
     function openLocalhost() {
       closeOutdatedPopup();
-      // Try to open localhost in new tab
-      window.open('http://localhost:8080', '_blank');
+
+      const currentOrigin = window.location.origin;
+      const localUrl = (
+        currentOrigin.startsWith('http://localhost') ||
+        currentOrigin.startsWith('http://127.0.0.1') ||
+        currentOrigin.startsWith('http://0.0.0.0')
+      )
+        ? currentOrigin + window.location.pathname
+        : 'http://localhost:8000/';
+
+      try {
+        const popup = window.open(localUrl, '_blank');
+        if (!popup) {
+          window.location.href = localUrl;
+        }
+      } catch (error) {
+        window.location.href = localUrl;
+      }
     }
 
     document.addEventListener('DOMContentLoaded', function () {
