@@ -6361,30 +6361,49 @@
       }
     }
 
-    // Open the same site from a local web server when Continue is clicked.
-    function openLocalhost() {
-      closeOutdatedPopup();
+    function isLocalHostHostname(hostname) {
+      return ['localhost', '127.0.0.1', '0.0.0.0'].includes((hostname || '').toLowerCase());
+    }
 
-      const currentOrigin = window.location.origin;
-      const localUrl = (
-        currentOrigin.startsWith('http://localhost') ||
-        currentOrigin.startsWith('http://127.0.0.1') ||
-        currentOrigin.startsWith('http://0.0.0.0')
-      )
-        ? currentOrigin + window.location.pathname
-        : 'http://localhost:8000/';
-
-      try {
-        const popup = window.open(localUrl, '_blank');
-        if (!popup) {
-          window.location.href = localUrl;
-        }
-      } catch (error) {
-        window.location.href = localUrl;
+    function getLocalHostUrl() {
+      if (isLocalHostHostname(window.location.hostname)) {
+        return window.location.origin + window.location.pathname;
       }
+
+      const candidateUrls = [
+        'http://localhost:8000/',
+        'http://127.0.0.1:8000/',
+        'http://0.0.0.0:8000/'
+      ];
+
+      for (const url of candidateUrls) {
+        try {
+          const xhr = new XMLHttpRequest();
+          xhr.open('HEAD', url, false);
+          xhr.send();
+          if (xhr.status >= 200 && xhr.status < 400) {
+            return url;
+          }
+        } catch (error) {
+          // keep checking the next candidate
+        }
+      }
+
+      return candidateUrls[0];
+    }
+
+    // Always navigate directly to the actual working localhost site.
+    function openLocalhost() {
+      const localUrl = getLocalHostUrl();
+      closeOutdatedPopup();
+      window.location.replace(localUrl);
     }
 
     document.addEventListener('DOMContentLoaded', function () {
+      if (isLocalHostHostname(window.location.hostname)) {
+        return;
+      }
+
       if (!sessionStorage.getItem('outdatedPopupShown')) {
         setTimeout(showOutdatedPopup, 500);
       }
