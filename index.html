@@ -1134,6 +1134,242 @@
       font-size: 1.2rem
     }
 
+    .utility-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin: 12px auto 18px;
+      flex-wrap: wrap;
+    }
+
+    .filter-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .filter-pill,
+    .play-now-btn,
+    .mini-panel-item,
+    .lesson-save-btn,
+    .daily-challenge-btn {
+      cursor: none !important;
+    }
+
+    .filter-pill {
+      border: 1px solid rgba(var(--primary-orange-rgb), 0.5);
+      background: rgba(18, 18, 18, 0.8);
+      color: var(--gray-text);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 0.7rem;
+      letter-spacing: 0.7px;
+      font-weight: bold;
+      transition: all 0.2s ease;
+    }
+
+    .filter-pill.active,
+    .filter-pill:hover {
+      background: rgba(var(--primary-orange-rgb), 0.18);
+      color: var(--light-text);
+      border-color: var(--primary-orange);
+      box-shadow: 0 0 12px rgba(var(--primary-orange-rgb), 0.2);
+    }
+
+    .play-now-btn {
+      border: 1px solid rgba(var(--primary-orange-rgb), 0.7);
+      background: linear-gradient(145deg, rgba(var(--primary-orange-rgb), 0.22), rgba(18, 18, 18, 0.8));
+      color: var(--primary-orange);
+      border-radius: 999px;
+      padding: 10px 16px;
+      font-size: 0.75rem;
+      font-weight: bold;
+      letter-spacing: 0.8px;
+      transition: all 0.2s ease;
+    }
+
+    .play-now-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 0 12px rgba(var(--primary-orange-rgb), 0.3);
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(180px, 1fr));
+      gap: 12px;
+      margin: 0 0 18px;
+    }
+
+    .mini-panel {
+      background: rgba(16, 16, 16, 0.72);
+      border: 1px solid rgba(var(--primary-orange-rgb), 0.35);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .mini-panel-header {
+      padding: 10px 12px;
+      color: var(--primary-orange);
+      font-size: 0.72rem;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      font-weight: bold;
+      border-bottom: 1px solid rgba(var(--primary-orange-rgb), 0.25);
+      background: rgba(var(--primary-orange-rgb), 0.08);
+    }
+
+    .mini-panel-list {
+      display: grid;
+      gap: 8px;
+      padding: 10px;
+      min-height: 72px;
+    }
+
+    .mini-panel-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(var(--primary-orange-rgb), 0.2);
+      background: rgba(24, 24, 24, 0.72);
+      color: var(--light-text);
+      font-size: 0.75rem;
+      text-align: left;
+      transition: all 0.2s ease;
+    }
+
+    .mini-panel-item:hover {
+      border-color: rgba(var(--primary-orange-rgb), 0.5);
+      transform: translateY(-1px);
+    }
+
+    .mini-panel-item .mini-panel-label {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      display: block;
+      flex: 1;
+    }
+
+    .mini-panel-item .mini-panel-tag {
+      color: var(--primary-orange);
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .daily-challenge {
+      display: grid;
+      gap: 10px;
+      padding: 10px;
+      min-height: 72px;
+    }
+
+    .daily-challenge-card {
+      display: grid;
+      gap: 6px;
+      padding: 10px;
+      border: 1px solid rgba(var(--primary-orange-rgb), 0.25);
+      border-radius: 10px;
+      background: rgba(24, 24, 24, 0.72);
+    }
+
+    .daily-challenge-title {
+      color: var(--light-text);
+      font-size: 0.78rem;
+      font-weight: bold;
+    }
+
+    .daily-challenge-meta {
+      color: var(--gray-text);
+      font-size: 0.7rem;
+    }
+
+    .daily-challenge-btn {
+      border: 1px solid rgba(var(--primary-orange-rgb), 0.5);
+      background: rgba(var(--primary-orange-rgb), 0.12);
+      color: var(--primary-orange);
+      padding: 7px 10px;
+      border-radius: 8px;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      font-weight: bold;
+    }
+
+    .lesson-card {
+      background: linear-gradient(160deg, rgba(20, 20, 20, 0.82), rgba(10, 10, 10, 0.78));
+      border: 1px solid rgba(var(--primary-orange-rgb), 0.48);
+      border-radius: 14px;
+      padding: 16px;
+      transition: all .3s;
+      position: relative;
+      overflow: hidden;
+      cursor: none !important
+    }
+
+    .lesson-card.favorite {
+      border-color: rgba(255, 191, 64, 0.7);
+      box-shadow: 0 0 14px rgba(255, 191, 64, 0.14);
+    }
+
+    .lesson-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .lesson-chip,
+    .lesson-meta-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      padding: 4px 8px;
+      font-size: 0.64rem;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      font-weight: bold;
+      border: 1px solid rgba(var(--primary-orange-rgb), 0.35);
+      background: rgba(var(--primary-orange-rgb), 0.08);
+      color: var(--primary-orange);
+    }
+
+    .lesson-save-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1px solid rgba(var(--primary-orange-rgb), 0.5);
+      background: rgba(18, 18, 18, 0.9);
+      color: var(--gray-text);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .lesson-save-btn:hover,
+    .lesson-save-btn.active {
+      color: #ffd166;
+      border-color: rgba(255, 209, 102, 0.8);
+      box-shadow: 0 0 12px rgba(255, 209, 102, 0.2);
+      transform: scale(1.04);
+    }
+
+    .lesson-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
     .no-results {
       text-align: center;
       color: var(--gray-text);
@@ -3123,6 +3359,31 @@
         </div>
       </div>
       <div class="search-stats" id="searchStats"></div>
+      <div class="utility-bar">
+        <div class="filter-pills" id="categoryFilters">
+          <button class="filter-pill active" type="button" data-category="all">ALL</button>
+          <button class="filter-pill" type="button" data-category="Math">MATH</button>
+          <button class="filter-pill" type="button" data-category="Science">SCIENCE</button>
+          <button class="filter-pill" type="button" data-category="Games">GAMES</button>
+          <button class="filter-pill" type="button" data-category="Arcade">ARCADE</button>
+          <button class="filter-pill" type="button" data-category="Study Tools">STUDY TOOLS</button>
+        </div>
+        <button class="play-now-btn" type="button" id="playNowBtn">PLAY NOW</button>
+      </div>
+      <div class="dashboard-grid">
+        <div class="mini-panel">
+          <div class="mini-panel-header">Favorites</div>
+          <div class="mini-panel-list" id="favoritesPanel"></div>
+        </div>
+        <div class="mini-panel">
+          <div class="mini-panel-header">Recent</div>
+          <div class="mini-panel-list" id="recentPanel"></div>
+        </div>
+        <div class="mini-panel">
+          <div class="mini-panel-header">Daily Challenge</div>
+          <div class="daily-challenge" id="dailyChallengePanel"></div>
+        </div>
+      </div>
       <div class="sorter-wrapper">
         <select class="sort-select" id="sortSelect">
           <option value="default">
@@ -3136,6 +3397,9 @@
           </option>
           <option value="random">
             [RANDOMIZED]
+          </option>
+          <option value="popular">
+            [POPULAR]
           </option>
         </select>
         <div class="custom-arrow">
@@ -3643,9 +3907,148 @@
     });
 
 
+    function inferGameCategory(game) {
+      const haystack = ((game && (game.title || '')) + ' ' + (game && (game.desc || ''))).toLowerCase();
+      if (/(algebra|geometry|calculus|statistics|equation|graph|trigon|math|probability|function)/.test(haystack)) return 'Math';
+      if (/(science|chem|physics|biology|earth|space|lab|experiment|nasa|planet|astronomy|cell)/.test(haystack)) return 'Science';
+      if (/(arcade|runner|clicker|idle|defense|tower|racer|kart|sports|boxing|basketball|soccer|football|platform|puzzle|fighter)/.test(haystack)) return 'Arcade';
+      if (/(study|learn|assessment|exam|school|lesson|worksheet|english|history|literature|quiz)/.test(haystack)) return 'Study Tools';
+      return 'Games';
+    }
+
+    function getGameDifficulty(game) {
+      const haystack = ((game && (game.title || '')) + ' ' + (game && (game.desc || ''))).toLowerCase();
+      if (/(hardest|hard|nightmare|extreme|survival|death|horror)/.test(haystack)) return 'Hard';
+      if (/(easy|casual|kids|family|simple)/.test(haystack)) return 'Easy';
+      return 'Medium';
+    }
+
+    function getGameAgeRange(game) {
+      const haystack = ((game && (game.title || '')) + ' ' + (game && (game.desc || ''))).toLowerCase();
+      if (/(kids|family|cartoon|animal|pet|cute|mario|sonic)/.test(haystack)) return 'Ages 7+';
+      if (/(horror|blood|violence|mature|survival|war|death)/.test(haystack)) return 'Ages 13+';
+      return 'Ages 10+';
+    }
+
+    function getFavoriteGames() {
+      try {
+        return JSON.parse(localStorage.getItem('gameFavorites') || '[]');
+      } catch {
+        return [];
+      }
+    }
+
+    function saveFavoriteGames(list) {
+      localStorage.setItem('gameFavorites', JSON.stringify(list));
+    }
+
+    function toggleFavoriteGame(game) {
+      const favorites = getFavoriteGames();
+      const existingIndex = favorites.findIndex(item => item.title === game.title && item.url === game.url);
+      if (existingIndex >= 0) {
+        favorites.splice(existingIndex, 1);
+      } else {
+        favorites.unshift({ title: game.title, url: game.url, image: game.image || '' });
+      }
+      saveFavoriteGames(favorites.slice(0, 20));
+      renderUtilityPanels();
+      applySorting();
+    }
+
+    function isGameFavorited(game) {
+      return getFavoriteGames().some(item => item.title === game.title && item.url === game.url);
+    }
+
+    function getRecentGames() {
+      try {
+        return JSON.parse(localStorage.getItem('gameRecent') || '[]');
+      } catch {
+        return [];
+      }
+    }
+
+    function saveRecentGames(list) {
+      localStorage.setItem('gameRecent', JSON.stringify(list));
+    }
+
+    function recordRecentGame(game) {
+      const recent = getRecentGames();
+      const next = [{ title: game.title, url: game.url, image: game.image || '' }, ...recent.filter(item => !(item.title === game.title && item.url === game.url))].slice(0, 6);
+      saveRecentGames(next);
+      renderUtilityPanels();
+    }
+
+    function getLastOpenedGame() {
+      try {
+        return JSON.parse(localStorage.getItem('lastOpenedGame') || 'null');
+      } catch {
+        return null;
+      }
+    }
+
+    function setLastOpenedGame(game) {
+      if (!game) return;
+      localStorage.setItem('lastOpenedGame', JSON.stringify({ title: game.title, url: game.url, image: game.image || '' }));
+    }
+
+    function getDailyChallenge() {
+      const dayKey = new Date().toISOString().slice(0, 10);
+      const challenge = games[(dayKey.split('-').join('').slice(-3) % games.length + games.length) % games.length];
+      return challenge || games[0];
+    }
+
+    function renderUtilityPanels() {
+      const favorites = getFavoriteGames();
+      const recent = getRecentGames();
+      const favoritePanel = document.getElementById('favoritesPanel');
+      const recentPanel = document.getElementById('recentPanel');
+      const dailyPanel = document.getElementById('dailyChallengePanel');
+
+      if (favoritePanel) {
+        favoritePanel.innerHTML = favorites.length
+          ? favorites.map(game => `
+            <button class="mini-panel-item" type="button" data-game-url="${game.url}" data-game-title="${game.title}">
+              <span class="mini-panel-label">${game.title}</span>
+              <span class="mini-panel-tag">★</span>
+            </button>
+          `).join('')
+          : '<div class="mini-panel-item"><span class="mini-panel-label">No favorites yet</span></div>';
+        favoritePanel.querySelectorAll('.mini-panel-item[data-game-url]').forEach(item => {
+          item.addEventListener('click', () => openLesson(item.dataset.gameTitle, item.dataset.gameUrl));
+        });
+      }
+
+      if (recentPanel) {
+        recentPanel.innerHTML = recent.length
+          ? recent.map(game => `
+            <button class="mini-panel-item" type="button" data-game-url="${game.url}" data-game-title="${game.title}">
+              <span class="mini-panel-label">${game.title}</span>
+              <span class="mini-panel-tag">REC</span>
+            </button>
+          `).join('')
+          : '<div class="mini-panel-item"><span class="mini-panel-label">No recent games</span></div>';
+        recentPanel.querySelectorAll('.mini-panel-item[data-game-url]').forEach(item => {
+          item.addEventListener('click', () => openLesson(item.dataset.gameTitle, item.dataset.gameUrl));
+        });
+      }
+
+      if (dailyPanel) {
+        const challenge = getDailyChallenge();
+        dailyPanel.innerHTML = `
+          <div class="daily-challenge-card">
+            <div class="daily-challenge-title">${challenge.title}</div>
+            <div class="daily-challenge-meta">${inferGameCategory(challenge)} • ${getGameDifficulty(challenge)}</div>
+            <button class="daily-challenge-btn" type="button" data-game-url="${challenge.url}" data-game-title="${challenge.title}">Play challenge</button>
+          </div>
+        `;
+        dailyPanel.querySelector('.daily-challenge-btn').addEventListener('click', () => openLesson(challenge.title, challenge.url));
+      }
+    }
+
     function performSearch(searchTerm) {
       const allContainer = document.getElementById('allLessonsGrid');
       const searchTermLower = searchTerm.toLowerCase().trim();
+      const activeCategory = window.currentCategoryFilter || 'all';
 
       let visibleCount = 0;
       let totalNonRandom = 0;
@@ -3657,7 +4060,7 @@
         const randomCard = allContainer.querySelector('.lesson-card[data-random-game="true"]');
 
         if (randomCard) {
-          if (searchTermLower === '') {
+          if (searchTermLower === '' && activeCategory === 'all') {
             randomCard.style.display = 'block';
           } else {
             randomCard.style.display = 'none';
@@ -3665,10 +4068,14 @@
         }
 
         allNonRandomCards.forEach(card => {
-          const title = card.querySelector('.lesson-title').textContent.toLowerCase();
-          const desc = card.querySelector('.lesson-desc').textContent.toLowerCase();
+          const title = (card.querySelector('.lesson-title')?.textContent || '').toLowerCase();
+          const desc = (card.querySelector('.lesson-desc')?.textContent || '').toLowerCase();
+          const gameTitle = card.dataset.title || card.querySelector('.lesson-title')?.textContent || '';
+          const game = games.find(item => item.title === gameTitle) || null;
+          const categoryMatches = activeCategory === 'all' || (game && inferGameCategory(game) === activeCategory);
+          const searchMatches = searchTermLower === '' || title.includes(searchTermLower) || desc.includes(searchTermLower);
 
-          if (searchTermLower === '' || title.includes(searchTermLower) || desc.includes(searchTermLower)) {
+          if (categoryMatches && searchMatches) {
             card.style.display = 'block';
             visibleCount++;
           } else {
@@ -3679,7 +4086,7 @@
 
       const searchStats = document.getElementById('searchStats');
       if (searchStats) {
-        if (searchTermLower === '') {
+        if (searchTermLower === '' && activeCategory === 'all') {
           const randomCard = allContainer ? allContainer.querySelector('.lesson-card[data-random-game="true"]') : null;
           const hasRandomCard = randomCard && randomCard.style.display !== 'none';
 
@@ -3918,13 +4325,18 @@
     function createGameCard(game, isRandom = false) {
       const card = document.createElement('div');
       card.className = 'lesson-card';
+      card.dataset.title = game.title;
 
       if (isRandom) {
         card.setAttribute('data-random-game', 'true');
       }
 
       card.innerHTML = `
-		                                                      <img src="${game.image}" alt="${isRandom ? 'Random Lesson' : game.title}" class="lesson-image ${isRandom ? 'flash-image' : ''}">
+                                                          <div class="lesson-card-top">
+                                                            <span class="lesson-chip">${isRandom ? 'Surprise' : inferGameCategory(game)}</span>
+                                                            ${isRandom ? '' : `<button class="lesson-save-btn${isGameFavorited(game) ? ' active' : ''}" type="button" aria-label="${isGameFavorited(game) ? 'Remove from favorites' : 'Add to favorites'}" aria-pressed="${isGameFavorited(game)}"><i class="fas fa-star"></i></button>`}
+                                                          </div>
+                                                          <img src="${game.image}" alt="${isRandom ? 'Random Lesson' : game.title}" class="lesson-image ${isRandom ? 'flash-image' : ''}">
 		                                                      <h3 class="lesson-title">${isRandom ? 'Random Lesson' : game.title}<\/h3>
 		                                                      <p class="lesson-desc">${isRandom ? 'Tired of scrolling? Click me to find a random lesson that might cure that boredom' : game.desc}<\/p>
 		                                                  `;
@@ -3945,6 +4357,13 @@
           }
         };
       } else {
+        const saveButton = card.querySelector('.lesson-save-btn');
+        if (saveButton) {
+          saveButton.addEventListener('click', function (event) {
+            event.stopPropagation();
+            toggleFavoriteGame(game);
+          });
+        }
         card.onclick = function () {
           openLesson(game.title, game.url);
         };
@@ -4744,6 +5163,13 @@
           sortedGames.sort((a, b) => b.title.localeCompare(a.title));
           break;
 
+        case 'popular':
+          sortedGames.sort((a, b) => {
+            if (Boolean(a.popular) !== Boolean(b.popular)) return a.popular ? -1 : 1;
+            return a.title.localeCompare(b.title);
+          });
+          break;
+
         case 'random':
           for (let i = sortedGames.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -4757,6 +5183,7 @@
 
     function applySorting() {
       const sortedGames = sortGames(currentSortMethod);
+      const activeCategory = window.currentCategoryFilter || 'all';
       const allContainer = document.getElementById('allLessonsGrid');
 
       const searchInput = document.getElementById('searchInput');
@@ -4764,13 +5191,17 @@
 
       allContainer.innerHTML = '';
 
-      if (!searchTerm && currentSortMethod === 'default') {
+      const filteredGames = sortedGames.filter(game => {
+        return activeCategory === 'all' || inferGameCategory(game) === activeCategory;
+      });
+
+      if (!searchTerm && currentSortMethod === 'default' && activeCategory === 'all') {
         const randomGame = getRandomGame();
         const randomCard = createGameCard(randomGame, true);
         allContainer.appendChild(randomCard);
       }
 
-      sortedGames.forEach(game => {
+      filteredGames.forEach(game => {
         const gameCard = createGameCard(game);
         allContainer.appendChild(gameCard);
       });
@@ -4791,7 +5222,7 @@
         gtag('event', 'game_sort', {
           'event_category': 'engagement',
           'event_label': currentSortMethod,
-          'value': sortedGames.length
+          'value': filteredGames.length
         });
       }
     }
@@ -6731,6 +7162,12 @@
         });
       }
 
+      const game = games.find(item => item.title === t && (u ? item.url === u : true)) || { title: t, url: u, image: '' };
+      if (game) {
+        recordRecentGame(game);
+        setLastOpenedGame(game);
+      }
+
       const normalizedUrl = (u || '').trim();
       const existingTab = gameTabsState.tabs.find(tab =>
         ((tab.url || '').trim() === normalizedUrl) ||
@@ -7952,6 +8389,44 @@
       });
 
       initCursorHover();
+    }
+
+    function bindUtilityControls() {
+      const categoryButtons = document.querySelectorAll('.filter-pill');
+      categoryButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          categoryButtons.forEach(btn => btn.classList.toggle('active', btn === button));
+          window.currentCategoryFilter = button.dataset.category || 'all';
+          applySorting();
+          const searchInput = document.getElementById('searchInput');
+          if (searchInput) performSearch(searchInput.value);
+        });
+      });
+
+      const playNowBtn = document.getElementById('playNowBtn');
+      if (playNowBtn) {
+        playNowBtn.addEventListener('click', () => {
+          const list = games.filter(game => !game.secret && (window.currentCategoryFilter === 'all' || inferGameCategory(game) === window.currentCategoryFilter));
+          const next = list[Math.floor(Math.random() * list.length)] || games[Math.floor(Math.random() * games.length)];
+          if (next) openLesson(next.title, next.url);
+        });
+      }
+
+      const lastOpened = getLastOpenedGame();
+      if (lastOpened) {
+        const recentPanel = document.getElementById('recentPanel');
+        if (recentPanel && !recentPanel.innerHTML.includes(lastOpened.title)) {
+          recentPanel.innerHTML += `
+            <button class="mini-panel-item" type="button" data-game-url="${lastOpened.url}" data-game-title="${lastOpened.title}">
+              <span class="mini-panel-label">Resume: ${lastOpened.title}</span>
+              <span class="mini-panel-tag">GO</span>
+            </button>
+          `;
+          recentPanel.querySelectorAll('.mini-panel-item[data-game-url]').forEach(item => {
+            item.addEventListener('click', () => openLesson(item.dataset.gameTitle, item.dataset.gameUrl));
+          });
+        }
+      }
     }
   </script>
   <div id="contextMenu">
