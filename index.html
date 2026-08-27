@@ -1197,7 +1197,7 @@
 
     .dashboard-grid {
       display: grid;
-      grid-template-columns: repeat(3, minmax(180px, 1fr));
+      grid-template-columns: repeat(4, minmax(180px, 1fr));
       gap: 12px;
       margin: 0 0 18px;
     }
@@ -1302,20 +1302,87 @@
       font-weight: bold;
     }
 
+    .session-stats-list {
+      display: grid;
+      gap: 8px;
+      padding: 10px;
+      min-height: 72px;
+    }
+
+    .session-stat {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border: 1px solid rgba(var(--primary-orange-rgb), 0.2);
+      border-radius: 8px;
+      background: rgba(24, 24, 24, 0.72);
+      color: var(--light-text);
+      font-size: 0.75rem;
+    }
+
+    .session-stat .label {
+      color: var(--gray-text);
+    }
+
+    .session-stat .value {
+      color: var(--primary-orange);
+      font-weight: bold;
+    }
+
     .lesson-card {
       background: linear-gradient(160deg, rgba(20, 20, 20, 0.82), rgba(10, 10, 10, 0.78));
       border: 1px solid rgba(var(--primary-orange-rgb), 0.48);
       border-radius: 14px;
       padding: 16px;
-      transition: all .3s;
+      transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
       position: relative;
       overflow: hidden;
       cursor: none !important
     }
 
+    .lesson-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.28), 0 0 18px rgba(var(--primary-orange-rgb), 0.16);
+      border-color: rgba(var(--primary-orange-rgb), 0.72);
+    }
+
     .lesson-card.favorite {
       border-color: rgba(255, 191, 64, 0.7);
       box-shadow: 0 0 14px rgba(255, 191, 64, 0.14);
+    }
+
+    .lesson-card-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .lesson-detail-btn,
+    .detail-modal-btn {
+      border: 1px solid rgba(var(--primary-orange-rgb), 0.5);
+      background: rgba(var(--primary-orange-rgb), 0.08);
+      color: var(--primary-orange);
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 0.68rem;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      transition: all 0.2s ease;
+      cursor: none !important;
+    }
+
+    .lesson-detail-btn:hover,
+    .detail-modal-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 0 12px rgba(var(--primary-orange-rgb), 0.2);
+    }
+
+    .detail-modal-btn.primary {
+      background: linear-gradient(145deg, rgba(var(--primary-orange-rgb), 0.22), rgba(18, 18, 18, 0.8));
     }
 
     .lesson-card-top {
@@ -1363,6 +1430,37 @@
       transform: scale(1.04);
     }
 
+    .lesson-card-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 12px;
+    }
+
+    .lesson-detail-btn,
+    .detail-modal-btn {
+      border: 1px solid rgba(var(--primary-orange-rgb), 0.5);
+      background: rgba(var(--primary-orange-rgb), 0.08);
+      color: var(--primary-orange);
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 0.68rem;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      transition: all 0.2s ease;
+      cursor: none !important;
+    }
+
+    .lesson-detail-btn:hover,
+    .detail-modal-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 0 12px rgba(var(--primary-orange-rgb), 0.2);
+    }
+
+    .detail-modal-btn.primary {
+      background: linear-gradient(145deg, rgba(var(--primary-orange-rgb), 0.22), rgba(18, 18, 18, 0.8));
+    }
+
     .lesson-meta {
       display: flex;
       flex-wrap: wrap;
@@ -1386,6 +1484,171 @@
       color: var(--primary-orange);
       margin-bottom: 20px;
       font-size: .9rem
+    }
+
+    .feature-strip {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin: 12px 0 22px;
+    }
+
+    .feature-strip-card {
+      background: linear-gradient(160deg, rgba(20, 20, 20, 0.82), rgba(12, 12, 12, 0.82));
+      border: 1px solid rgba(var(--primary-orange-rgb), 0.3);
+      border-radius: 14px;
+      padding: 14px 16px;
+      min-height: 110px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .feature-strip-label {
+      color: var(--primary-orange);
+      font-size: 0.7rem;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+
+    .feature-strip-title {
+      color: var(--light-text);
+      font-size: 1.05rem;
+      font-weight: bold;
+    }
+
+    .feature-strip-desc {
+      color: var(--gray-text);
+      font-size: 0.78rem;
+      line-height: 1.5;
+    }
+
+    .detail-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.72);
+      backdrop-filter: blur(8px);
+      z-index: 99999;
+      padding: 20px;
+    }
+
+    .detail-modal-backdrop.active {
+      display: flex;
+    }
+
+    .detail-modal {
+      position: relative;
+      width: min(760px, 92vw);
+      background: linear-gradient(145deg, rgba(18, 18, 18, 0.96), rgba(10, 10, 10, 0.98));
+      border: 1px solid rgba(var(--primary-orange-rgb), 0.6);
+      border-radius: 18px;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 28px rgba(var(--primary-orange-rgb), 0.24);
+      overflow: hidden;
+    }
+
+    .detail-modal-close {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 1px solid rgba(var(--primary-orange-rgb), 0.5);
+      background: rgba(0, 0, 0, 0.35);
+      color: var(--light-text);
+      font-size: 1.5rem;
+      line-height: 1;
+      cursor: none !important;
+      z-index: 2;
+    }
+
+    .detail-modal-body {
+      display: grid;
+      grid-template-columns: minmax(220px, 280px) 1fr;
+      gap: 0;
+    }
+
+    .detail-modal-image {
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-height: 240px;
+      object-fit: cover;
+      background: rgba(255,255,255,0.02);
+      border-right: 1px solid rgba(var(--primary-orange-rgb), 0.3);
+    }
+
+    .detail-modal-content {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding: 24px 22px 22px;
+    }
+
+    .detail-modal-kicker {
+      font-size: 0.7rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--primary-orange);
+      font-weight: bold;
+    }
+
+    .detail-modal-content h3 {
+      margin: 0;
+      color: var(--light-text);
+      font-size: clamp(1.5rem, 2vw, 2rem);
+    }
+
+    .detail-modal-content p {
+      margin: 0;
+      color: var(--gray-text);
+      line-height: 1.6;
+      font-size: 0.96rem;
+    }
+
+    .detail-modal-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .detail-modal-meta span {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      border: 1px solid rgba(var(--primary-orange-rgb), 0.35);
+      background: rgba(var(--primary-orange-rgb), 0.08);
+      color: var(--primary-orange);
+      font-size: 0.68rem;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 6px 9px;
+      font-weight: bold;
+    }
+
+    .detail-modal-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    @media (max-width: 680px) {
+      .detail-modal-body {
+        grid-template-columns: 1fr;
+      }
+
+      .detail-modal-image {
+        min-height: 180px;
+        border-right: none;
+        border-bottom: 1px solid rgba(var(--primary-orange-rgb), 0.3);
+      }
     }
 
     .social-icons a {
@@ -3334,6 +3597,23 @@
         </h2>
         <div class="home-carousel" id="homePopularCarousel"></div>
       </div>
+      <div class="feature-strip">
+        <div class="feature-strip-card">
+          <div class="feature-strip-label">Trending</div>
+          <div class="feature-strip-title">Top picks</div>
+          <div class="feature-strip-desc">Curated games for quick wins, fast runs, and chaotic fun.</div>
+        </div>
+        <div class="feature-strip-card">
+          <div class="feature-strip-label">Saved</div>
+          <div class="feature-strip-title">Favorites</div>
+          <div class="feature-strip-desc">Keep your go-to games close with local saves and instant replay.</div>
+        </div>
+        <div class="feature-strip-card">
+          <div class="feature-strip-label">Ready</div>
+          <div class="feature-strip-title">Surprise me</div>
+          <div class="feature-strip-desc">Jump into a random game when you don’t know what to play next.</div>
+        </div>
+      </div>
     </section>
     <div class="ad-container banner-ad">
       <div class="ad-label">ADVERTISEMENT</div>
@@ -3383,6 +3663,10 @@
           <div class="mini-panel-header">Daily Challenge</div>
           <div class="daily-challenge" id="dailyChallengePanel"></div>
         </div>
+        <div class="mini-panel">
+          <div class="mini-panel-header">Session Stats</div>
+          <div class="session-stats-list" id="sessionStatsPanel"></div>
+        </div>
       </div>
       <div class="sorter-wrapper">
         <select class="sort-select" id="sortSelect">
@@ -3408,6 +3692,24 @@
       </div>
       <div class="lessons-grid" id="allLessonsGrid"></div>
     </section>
+    <div class="detail-modal-backdrop" id="detailModalBackdrop" aria-hidden="true">
+      <div class="detail-modal" role="dialog" aria-modal="true" aria-labelledby="detailModalTitle">
+        <button class="detail-modal-close" id="detailModalClose" type="button" aria-label="Close game details">×</button>
+        <div class="detail-modal-body">
+          <img id="detailModalImage" src="" alt="Game cover" class="detail-modal-image">
+          <div class="detail-modal-content">
+            <div class="detail-modal-kicker" id="detailModalCategory">Game</div>
+            <h3 id="detailModalTitle">Game Title</h3>
+            <p id="detailModalDescription"></p>
+            <div class="detail-modal-meta" id="detailModalMeta"></div>
+            <div class="detail-modal-actions">
+              <button class="detail-modal-btn primary" id="detailPlayBtn" type="button">Play now</button>
+              <button class="detail-modal-btn" id="detailFavoriteBtn" type="button">Add favorite</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <section class="partners-section" id="partners-section">
       <h2>
         PARTNERS
@@ -3945,12 +4247,21 @@
     function toggleFavoriteGame(game) {
       const favorites = getFavoriteGames();
       const existingIndex = favorites.findIndex(item => item.title === game.title && item.url === game.url);
-      if (existingIndex >= 0) {
+      const wasFavorite = existingIndex >= 0;
+      if (wasFavorite) {
         favorites.splice(existingIndex, 1);
       } else {
         favorites.unshift({ title: game.title, url: game.url, image: game.image || '' });
       }
       saveFavoriteGames(favorites.slice(0, 20));
+
+      const sessionStats = getSessionStats();
+      const nextSession = {
+        ...sessionStats,
+        favoritesSaved: favorites.length
+      };
+      saveSessionStats(nextSession);
+
       renderUtilityPanels();
       applySorting();
     }
@@ -3997,12 +4308,43 @@
       return challenge || games[0];
     }
 
+    function getSessionStats() {
+      try {
+        return JSON.parse(localStorage.getItem('gameSessionStats') || '{"gamesOpened":0,"favoritesSaved":0,"minutesPlayed":0,"lastPlayed":""}');
+      } catch {
+        return { gamesOpened: 0, favoritesSaved: 0, minutesPlayed: 0, lastPlayed: '' };
+      }
+    }
+
+    function saveSessionStats(stats) {
+      localStorage.setItem('gameSessionStats', JSON.stringify(stats));
+    }
+
+    function updateSessionStats(game) {
+      const current = getSessionStats();
+      const next = {
+        gamesOpened: Number(current.gamesOpened || 0) + (game ? 1 : 0),
+        favoritesSaved: Number(current.favoritesSaved || 0),
+        minutesPlayed: Number(current.minutesPlayed || 0),
+        lastPlayed: game ? game.title : (current.lastPlayed || '')
+      };
+
+      if (game && !next.lastPlayed) {
+        next.lastPlayed = game.title;
+      }
+
+      saveSessionStats(next);
+      renderUtilityPanels();
+    }
+
     function renderUtilityPanels() {
       const favorites = getFavoriteGames();
       const recent = getRecentGames();
+      const sessionStats = getSessionStats();
       const favoritePanel = document.getElementById('favoritesPanel');
       const recentPanel = document.getElementById('recentPanel');
       const dailyPanel = document.getElementById('dailyChallengePanel');
+      const sessionPanel = document.getElementById('sessionStatsPanel');
 
       if (favoritePanel) {
         favoritePanel.innerHTML = favorites.length
@@ -4042,6 +4384,15 @@
           </div>
         `;
         dailyPanel.querySelector('.daily-challenge-btn').addEventListener('click', () => openLesson(challenge.title, challenge.url));
+      }
+
+      if (sessionPanel) {
+        sessionPanel.innerHTML = `
+          <div class="session-stat"><span class="label">Opened</span><span class="value">${sessionStats.gamesOpened || 0}</span></div>
+          <div class="session-stat"><span class="label">Favorites</span><span class="value">${favorites.length}</span></div>
+          <div class="session-stat"><span class="label">Minutes</span><span class="value">${Math.max(0, Number(sessionStats.minutesPlayed || 0))}</span></div>
+          <div class="session-stat"><span class="label">Last</span><span class="value">${sessionStats.lastPlayed ? sessionStats.lastPlayed.slice(0, 12) : 'None'}</span></div>
+        `;
       }
     }
 
@@ -4327,6 +4678,10 @@
       card.className = 'lesson-card';
       card.dataset.title = game.title;
 
+      if (isGameFavorited(game)) {
+        card.classList.add('favorite');
+      }
+
       if (isRandom) {
         card.setAttribute('data-random-game', 'true');
       }
@@ -4337,9 +4692,10 @@
                                                             ${isRandom ? '' : `<button class="lesson-save-btn${isGameFavorited(game) ? ' active' : ''}" type="button" aria-label="${isGameFavorited(game) ? 'Remove from favorites' : 'Add to favorites'}" aria-pressed="${isGameFavorited(game)}"><i class="fas fa-star"></i></button>`}
                                                           </div>
                                                           <img src="${game.image}" alt="${isRandom ? 'Random Lesson' : game.title}" class="lesson-image ${isRandom ? 'flash-image' : ''}">
-		                                                      <h3 class="lesson-title">${isRandom ? 'Random Lesson' : game.title}<\/h3>
-		                                                      <p class="lesson-desc">${isRandom ? 'Tired of scrolling? Click me to find a random lesson that might cure that boredom' : game.desc}<\/p>
-		                                                  `;
+																					  <h3 class="lesson-title">${isRandom ? 'Random Lesson' : game.title}<\/h3>
+																					  <p class="lesson-desc">${isRandom ? 'Tired of scrolling? Click me to find a random lesson that might cure that boredom' : game.desc}<\/p>
+																					  ${isRandom ? '' : '<div class="lesson-card-actions"><button class="lesson-detail-btn" type="button">Details</button></div>'}
+																					  `;
 
       if (isRandom) {
         card.onclick = function (e) {
@@ -4364,7 +4720,19 @@
             toggleFavoriteGame(game);
           });
         }
-        card.onclick = function () {
+
+        const detailBtn = card.querySelector('.lesson-detail-btn');
+        if (detailBtn) {
+          detailBtn.addEventListener('click', function (event) {
+            event.stopPropagation();
+            openGameDetailModal(game);
+          });
+        }
+
+        card.onclick = function (event) {
+          if (event.target.closest('.lesson-save-btn, .lesson-detail-btn')) {
+            return;
+          }
           openLesson(game.title, game.url);
         };
       }
@@ -5228,6 +5596,17 @@
     }
 
     document.addEventListener('DOMContentLoaded', function () {
+      const backdrop = document.getElementById('detailModalBackdrop');
+      const closeBtn = document.getElementById('detailModalClose');
+      if (backdrop) {
+        backdrop.addEventListener('click', function (event) {
+          if (event.target === backdrop) closeGameDetailModal();
+        });
+      }
+      if (closeBtn) {
+        closeBtn.addEventListener('click', closeGameDetailModal);
+      }
+
       const sortSelect = document.getElementById('sortSelect');
       const arrow = document.querySelector('.custom-arrow');
 
@@ -5500,6 +5879,8 @@
     })();
 
     document.addEventListener('DOMContentLoaded', function () {
+      renderUtilityPanels();
+      bindUtilityControls();
       generateGameCards();
       buildHomePopularCarousel();
       initHomeLogoTilt();
@@ -7144,6 +7525,71 @@
       }, 3000);
     }
 
+    function openGameDetailModal(game) {
+      if (!game || !game.title) return;
+
+      const backdrop = document.getElementById('detailModalBackdrop');
+      if (!backdrop) return;
+
+      const title = document.getElementById('detailModalTitle');
+      const description = document.getElementById('detailModalDescription');
+      const category = document.getElementById('detailModalCategory');
+      const image = document.getElementById('detailModalImage');
+      const meta = document.getElementById('detailModalMeta');
+      const playBtn = document.getElementById('detailPlayBtn');
+      const favoriteBtn = document.getElementById('detailFavoriteBtn');
+      const isFavorite = isGameFavorited(game);
+
+      if (title) title.textContent = game.title;
+      if (description) description.textContent = game.desc || 'A playable browser game from the library.';
+      if (category) category.textContent = inferGameCategory(game);
+      if (image) image.src = game.image || '';
+      if (meta) {
+        meta.innerHTML = `
+          <span>${getGameDifficulty(game)}</span>
+          <span>${getGameAgeRange(game)}</span>
+          <span>${game.url ? 'Browser game' : 'Game'}</span>
+        `;
+      }
+
+      if (playBtn) {
+        playBtn.onclick = () => {
+          closeGameDetailModal();
+          openLesson(game.title, game.url);
+        };
+      }
+
+      if (favoriteBtn) {
+        favoriteBtn.textContent = isFavorite ? 'Remove favorite' : 'Add favorite';
+        favoriteBtn.onclick = () => {
+          toggleFavoriteGame(game);
+          const updatedFavorite = isGameFavorited(game);
+          favoriteBtn.textContent = updatedFavorite ? 'Remove favorite' : 'Add favorite';
+          const card = document.querySelector(`.lesson-card[data-title="${CSS.escape(game.title)}"]`);
+          if (card) {
+            card.classList.toggle('favorite', updatedFavorite);
+            const star = card.querySelector('.lesson-save-btn');
+            if (star) {
+              star.classList.toggle('active', updatedFavorite);
+              star.setAttribute('aria-pressed', String(updatedFavorite));
+            }
+          }
+        };
+      }
+
+      backdrop.classList.add('active');
+      backdrop.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeGameDetailModal() {
+      const backdrop = document.getElementById('detailModalBackdrop');
+      if (!backdrop) return;
+      backdrop.classList.remove('active');
+      backdrop.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
     function openLesson(t, u) {
       if (typeof gtag !== 'undefined') {
         gtag('event', 'game_launch', {
@@ -7166,6 +7612,7 @@
       if (game) {
         recordRecentGame(game);
         setLastOpenedGame(game);
+        updateSessionStats(game);
       }
 
       const normalizedUrl = (u || '').trim();
@@ -7363,6 +7810,7 @@
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         closeTabInfoModal();
+        closeGameDetailModal();
       }
       if (e.ctrlKey && e.shiftKey && e.key === 'S') {
         e.preventDefault();
@@ -8427,6 +8875,9 @@
           });
         }
       }
+
+      window.currentCategoryFilter = window.currentCategoryFilter || 'all';
+      renderUtilityPanels();
     }
   </script>
   <div id="contextMenu">
@@ -8591,6 +9042,7 @@
         "Dont make me up the pole on you mf",
         "Alr bro ts was not the wind",
         "Banana",
+        "South high school is the best school",
       ];
 
       const typingElement = document.getElementById('typing-quote');
