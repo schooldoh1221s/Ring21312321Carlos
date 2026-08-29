@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shadow Garden - Helper</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Courier New', monospace; }
+    :root {
+      --primary-orange: #c27c15;
+      --primary-orange-rgb: 194, 124, 21;
+      --dark-bg: #0a0a0a;
+      --light-text: #f6f4ef;
+      --gray-text: #b5b0a6;
+      --accent-orange: #f2ab34;
+    }
+    body { background: var(--dark-bg); color: var(--light-text); min-height: 100vh; display: flex; flex-direction: column; }
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 20px; border-bottom: 1px solid rgba(var(--primary-orange-rgb), 0.4);
+      background: rgba(15, 15, 15, 0.95);
+    }
+    .brand { display: flex; align-items: center; gap: 10px; color: var(--primary-orange); font-weight: bold; font-size: 1.1rem; text-decoration: none; }
+    .brand i { font-size: 1.3rem; }
+    .top-actions { display: flex; gap: 8px; align-items: center; }
+    .model-select {
+      background: rgba(20,20,20,0.8); border: 1px solid rgba(var(--primary-orange-rgb), 0.4);
+      border-radius: 8px; color: var(--light-text); padding: 6px 10px; font-size: 0.78rem; outline: none;
+      cursor: pointer;
+    }
+    .icon-btn {
+      background: rgba(var(--primary-orange-rgb), 0.12); border: 1px solid rgba(var(--primary-orange-rgb), 0.4);
+      color: var(--primary-orange); width: 36px; height: 36px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;
+    }
+    .icon-btn:hover { background: rgba(var(--primary-orange-rgb), 0.25); border-color: var(--accent-orange); }
+    .chat-area { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+    .welcome { text-align: center; padding: 60px 20px; color: var(--gray-text); }
+    .welcome h2 { color: var(--primary-orange); font-size: 1.5rem; margin-bottom: 12px; }
+    .welcome p { font-size: 0.9rem; line-height: 1.6; }
+    .badge { display: inline-block; background: rgba(var(--primary-orange-rgb), 0.15); border: 1px solid rgba(var(--primary-orange-rgb), 0.4); color: var(--accent-orange); font-size: 0.7rem; padding: 3px 10px; border-radius: 999px; margin-bottom: 12px; letter-spacing: 1px; }
+    .prompt-list { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 20px; }
+    .prompt-chip {
+      border: 1px solid rgba(var(--primary-orange-rgb), 0.4); background: rgba(var(--primary-orange-rgb), 0.08);
+      color: var(--light-text); padding: 8px 14px; border-radius: 999px; font-size: 0.78rem;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .prompt-chip:hover { background: rgba(var(--primary-orange-rgb), 0.2); border-color: var(--accent-orange); }
+    .msg { max-width: 80%; padding: 12px 16px; border-radius: 14px; font-size: 0.88rem; line-height: 1.6; white-space: pre-wrap; word-break: break-word; }
+    .msg.user { align-self: flex-end; background: rgba(var(--primary-orange-rgb), 0.2); border: 1px solid rgba(var(--primary-orange-rgb), 0.4); border-bottom-right-radius: 4px; }
+    .msg.assistant { align-self: flex-start; background: rgba(25, 25, 25, 0.85); border: 1px solid rgba(255,255,255,0.08); border-bottom-left-radius: 4px; }
+    .msg-head { font-size: 0.68rem; color: var(--gray-text); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .msg-images { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+    .msg-images img { max-width: 120px; max-height: 120px; border-radius: 8px; border: 1px solid rgba(var(--primary-orange-rgb), 0.3); }
+    .composer-wrap { padding: 12px 20px; border-top: 1px solid rgba(var(--primary-orange-rgb), 0.3); background: rgba(12,12,12,0.95); }
+    .attachment-strip { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+    .attachment-strip img { width: 48px; height: 48px; object-fit: cover; border-radius: 6px; border: 1px solid rgba(var(--primary-orange-rgb), 0.3); }
+    .composer { display: flex; gap: 8px; align-items: flex-end; }
+    .composer textarea {
+      flex: 1; background: rgba(20,20,20,0.8); border: 1px solid rgba(var(--primary-orange-rgb), 0.4);
+      border-radius: 12px; color: var(--light-text); padding: 10px 14px; font-size: 0.88rem;
+      resize: none; outline: none; min-height: 42px; max-height: 120px; line-height: 1.4;
+    }
+    .composer textarea:focus { border-color: var(--accent-orange); box-shadow: 0 0 8px rgba(var(--primary-orange-rgb), 0.2); }
+    .composer .icon-btn { min-height: 42px; }
+    .error-line { color: #ff6b6b; font-size: 0.78rem; padding: 6px 20px; display: none; }
+    .error-line.visible { display: block; }
+    .composer-note { text-align: center; color: var(--gray-text); font-size: 0.68rem; margin-top: 6px; }
+    .helper-status { text-align: center; color: var(--gray-text); font-size: .72rem; min-height: 18px; }
+    .helper-status.busy { color: var(--accent-orange); }
+    .helper-status.offline { color: #ffb4b4; }
+    @media (max-width: 640px) { .model-select { max-width: 112px; } .brand { font-size: .85rem; } }
+    .typing { display: inline-flex; gap: 4px; padding: 8px 12px; }
+    .typing span { width: 6px; height: 6px; border-radius: 50%; background: var(--primary-orange); animation: blink 1.2s infinite; }
+    .typing span:nth-child(2) { animation-delay: 0.2s; }
+    .typing span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes blink { 0%,80%,100% { opacity: 0.3; } 40% { opacity: 1; } }
+    @media (max-width: 640px) {
+      .msg { max-width: 92%; }
+      .chat-area { padding: 12px; }
+      .composer-wrap { padding: 10px 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <a class="brand" href="index.html"><i class="fas fa-seedling"></i> CARLO'S RING · Helper</a>
+    <div class="top-actions">
+      <select class="model-select" id="modelSelect">
+        <option value="openai">GPT (Smart)</option>
+        <option value="mistral">Mistral</option>
+        <option value="llama">Llama</option>
+      </select>
+      <button class="icon-btn" id="btnNewChat" title="New chat"><i class="fas fa-plus"></i></button>
+    </div>
+  </div>
+
+  <div class="chat-area" id="chatArea">
+    <div class="welcome" id="welcome">
+      <div class="badge"><i class="fas fa-bolt"></i> FREE · NO API KEY NEEDED</div>
+      <h2><i class="fas fa-seedling"></i> Shadow Garden Helper</h2>
+      <p>Ask me anything. I'm smart, fast, and completely free.</p>
+      <div class="prompt-list">
+        <button class="prompt-chip" data-prompt="Help me study for a test">📚 Help me study</button>
+        <button class="prompt-chip" data-prompt="Brainstorm ideas for a creative project">💡 Brainstorm ideas</button>
+        <button class="prompt-chip" data-prompt="Write a short story">✍️ Write a story</button>
+        <button class="prompt-chip" data-prompt="Explain something complicated simply">🧠 Explain something</button>
+        <button class="prompt-chip" data-prompt="What's in this image?">🖼️ Analyze an image</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="error-line" id="errorLine"></div>
+  <div class="helper-status" id="helperStatus" aria-live="polite"></div>
+
+  <div class="composer-wrap">
+    <div class="attachment-strip" id="attachmentStrip" style="display:none;"></div>
+    <div class="composer">
+      <button class="icon-btn" id="btnAttach" title="Attach images"><i class="fas fa-paperclip"></i></button>
+      <textarea id="promptInput" placeholder="Type a message..." rows="1"></textarea>
+      <button class="icon-btn" id="btnSend" title="Send"><i class="fas fa-paper-plane"></i></button>
+    </div>
+    <div class="composer-note">Powered by free AI · No sign-up needed</div>
+  </div>
+
+  <input type="file" id="fileInput" accept="image/*" multiple style="display:none;">
+
+  <script>
+    let currentModel = 'openai';
+    let messages = []; // {role:'user'|'assistant', text, images:[dataURL]}
+    let attachments = [];
+    let isGenerating = false;
+
+    const chatArea = document.getElementById('chatArea');
+    const welcome = document.getElementById('welcome');
+    const promptInput = document.getElementById('promptInput');
+    const btnSend = document.getElementById('btnSend');
+    const btnAttach = document.getElementById('btnAttach');
+    const btnNewChat = document.getElementById('btnNewChat');
+    const fileInput = document.getElementById('fileInput');
+    const attachmentStrip = document.getElementById('attachmentStrip');
+    const errorLine = document.getElementById('errorLine');
+    const modelSelect = document.getElementById('modelSelect');
+    const helperStatus = document.getElementById('helperStatus');
+
+    // Prompt chips
+    document.querySelectorAll('.prompt-chip').forEach(chip => {
+      chip.addEventListener('click', () => { promptInput.value = chip.dataset.prompt; promptInput.focus(); });
+    });
+
+    // Model selector
+    modelSelect.addEventListener('change', () => { currentModel = modelSelect.value; });
+
+    // New chat
+    btnNewChat.addEventListener('click', () => {
+      messages = []; attachments = []; renderAttachments();
+      chatArea.innerHTML = ''; chatArea.appendChild(welcome); welcome.style.display = '';
+    });
+
+    // Attach
+    btnAttach.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', () => {
+      for (const file of fileInput.files) {
+        const reader = new FileReader();
+        reader.onload = e => { attachments.push(e.target.result); renderAttachments(); };
+        reader.readAsDataURL(file);
+      }
+      fileInput.value = '';
+    });
+    document.body.addEventListener('dragover', e => e.preventDefault());
+    document.body.addEventListener('drop', e => {
+      e.preventDefault();
+      for (const file of e.dataTransfer.files) {
+        if (!file.type.startsWith('image/')) continue;
+        const reader = new FileReader();
+        reader.onload = ev => { attachments.push(ev.target.result); renderAttachments(); };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    function renderAttachments() {
+      attachmentStrip.innerHTML = '';
+      attachmentStrip.style.display = attachments.length ? 'flex' : 'none';
+      attachments.forEach((img, idx) => {
+        const el = document.createElement('img');
+        el.src = img; el.title = 'Click to remove';
+        el.addEventListener('click', () => { attachments.splice(idx,1); renderAttachments(); });
+        attachmentStrip.appendChild(el);
+      });
+    }
+
+    // Send
+    btnSend.addEventListener('click', sendMessage);
+    promptInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+    });
+
+    function showError(msg) { errorLine.textContent = msg; errorLine.classList.toggle('visible', !!msg); helperStatus.classList.toggle('offline', !!msg); }
+    function setHelperStatus(text, busy = false) { helperStatus.textContent = text; helperStatus.classList.toggle('busy', busy); }
+
+    function addMessage(role, text, images) {
+      const div = document.createElement('div');
+      div.className = `msg ${role === 'user' ? 'user' : 'assistant'}`;
+      let html = `<div class="msg-head">${role === 'user' ? 'You' : 'Helper'}</div>`;
+      if (images && images.length) html += '<div class="msg-images">' + images.map(s => `<img src="${s}">`).join('') + '</div>';
+      html += `<div class="msg-body">${escapeHtml(text)}</div>`;
+      div.innerHTML = html;
+      chatArea.appendChild(div);
+      chatArea.scrollTop = chatArea.scrollHeight;
+      return div;
+    }
+
+    function escapeHtml(text) { const d = document.createElement('div'); d.textContent = text; return d.innerHTML; }
+
+    async function sendMessage() {
+      const text = promptInput.value.trim();
+      if (!text && !attachments.length) return;
+      if (isGenerating) return;
+
+      showError('');
+      welcome.style.display = 'none';
+
+      const userImages = [...attachments];
+      addMessage('user', text || '(image)', userImages);
+      messages.push({ role: 'user', text, images: userImages });
+      promptInput.value = ''; attachments = []; renderAttachments();
+
+      isGenerating = true;
+      setHelperStatus('Connecting to the remote AI…', true);
+      btnSend.disabled = true;
+      const typingDiv = document.createElement('div');
+      typingDiv.className = 'msg assistant';
+      typingDiv.innerHTML = '<div class="msg-head">Helper</div><div class="typing"><span></span><span></span><span></span></div>';
+      chatArea.appendChild(typingDiv);
+      chatArea.scrollTop = chatArea.scrollHeight;
+
+      try {
+        const reply = await callAI();
+        typingDiv.remove();
+        addMessage('assistant', reply);
+        messages.push({ role: 'assistant', text: reply });
+      } catch (err) {
+        typingDiv.remove();
+        showError(err.message || 'Something went wrong. Try again.');
+      } finally {
+        isGenerating = false;
+        btnSend.disabled = false;
+        setHelperStatus('');
+      }
+    }
+
+    async function callAI() {
+      const plainPrompt = messages.map(msg => `${msg.role === 'user' ? 'User' : 'Assistant'}: ${msg.text || '(image attached)'}`).join('\n\n');
+      const recentPrompt = plainPrompt.slice(-12000);
+      const providers = [
+        () => fetch(`https://text.pollinations.ai/${encodeURIComponent(recentPrompt)}`, { signal: AbortSignal.timeout(30000) }),
+        () => fetch(`https://text.pollinations.ai/prompt/${encodeURIComponent(recentPrompt)}`, { signal: AbortSignal.timeout(30000) })
+      ];
+      if (!messages.some(msg => msg.images && msg.images.length)) {
+        for (const request of providers) {
+          try {
+            const plainResponse = await request();
+            if (plainResponse.ok) {
+              const plainText = await plainResponse.text();
+              if (plainText.trim()) return plainText.trim();
+            }
+          } catch (_) {}
+        }
+      }
+
+      // Build OpenAI-compatible messages for Pollinations
+      const apiMessages = [];
+      // System prompt
+      apiMessages.push({ role: 'system', content: 'You are Shadow Garden Helper, a smart and friendly AI assistant. Be concise but thorough. Use markdown formatting when helpful.' });
+      // Conversation history
+      for (const msg of messages) {
+        if (msg.role === 'user') {
+          if (msg.images && msg.images.length) {
+            // Vision: send as content array
+            const content = [];
+            if (msg.text) content.push({ type: 'text', text: msg.text });
+            for (const img of msg.images) {
+              content.push({ type: 'image_url', image_url: { url: img } });
+            }
+            apiMessages.push({ role: 'user', content });
+          } else {
+            apiMessages.push({ role: 'user', content: msg.text });
+          }
+        } else {
+          apiMessages.push({ role: 'assistant', content: msg.text });
+        }
+      }
+
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 45000);
+      let response;
+      try {
+        response = await fetch('https://text.pollinations.ai/openai', {
+        signal: controller.signal,
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: currentModel,
+          messages: apiMessages
+        })
+        });
+      } catch (error) {
+        if (error.name === 'AbortError') throw new Error('The remote AI took too long to respond. Please try again.');
+        throw new Error('The remote AI could not be reached. Check your connection and try again.');
+      } finally {
+        clearTimeout(timeout);
+      }
+
+      if (!response.ok) {
+        const errText = await response.text().catch(() => '');
+        if (response.status === 403 && /turnstile|captcha/i.test(errText)) {
+          throw new Error('The free AI service is temporarily unavailable because its security check is active. Please try again shortly.');
+        }
+        throw new Error(`AI error (${response.status}). ${errText.slice(0, 100)}`);
+      }
+
+      const data = await response.json();
+      const text = data.choices?.[0]?.message?.content || '';
+      if (!text) throw new Error('Empty response from AI');
+      return text;
+    }
+  </script>
+</body>
+</html>
