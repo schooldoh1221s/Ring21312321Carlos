@@ -1,0 +1,10 @@
+[
+  {"name": "CapCut", "image": "https://house-hunters.epusara.com/apps/capcut.png", "url": "https://capcut.com/"},
+  {"name": "Discord", "image": "https://house-hunters.epusara.com/apps/discord.png", "url": "https://discord.com/"},
+  {"name": "Gauth Math", "image": "https://house-hunters.epusara.com/apps/guath.webp", "url": "https://www.gauthmath.com/"},
+  {"name": "GitHub", "image": "https://house-hunters.epusara.com/apps/github.png", "url": "https://github.com/"},
+  {"name": "Music", "image": "https://house-hunters.epusara.com/apps/music.png", "url": "https://monochrome.tf/"},
+  {"name": "TikTok", "image": "https://house-hunters.epusara.com/apps/tiktok.png", "url": "https://tiktok.com/"},
+  {"name": "Twitch", "image": "https://house-hunters.epusara.com/apps/twitch.png", "url": "https://www.twitch.tv/"},
+  {"name": "Venge IO", "image": "https://house-hunters.epusara.com/apps/venge.jpeg", "url": "https://venge.io/"}
+]
