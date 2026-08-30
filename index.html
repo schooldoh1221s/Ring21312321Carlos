@@ -3911,7 +3911,12 @@
         <div id="proxyHome" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;padding:20px;">
           <i class="fas fa-shield-alt" style="font-size:4rem;color:var(--primary-orange);margin-bottom:20px;opacity:0.6;"></i>
           <h3 style="color:var(--light-text);margin-bottom:10px;font-size:1.3rem;">Web Proxy</h3>
-          <p style="color:var(--gray-text);max-width:400px;margin-bottom:20px;">Enter a URL above or use DuckDuckGo to search. Bookmarks are saved locally.</p>
+          <p style="color:var(--gray-text);max-width:400px;margin-bottom:20px;">Enter a URL above and press Go. Some sites block iframe embedding and will open in a new tab instead.</p>
+          <div id="proxyErrorMsg" style="display:none;background:rgba(var(--primary-orange-rgb),0.15);border:1px solid var(--primary-orange);border-radius:10px;padding:14px 18px;margin-bottom:16px;max-width:400px;">
+            <p style="color:var(--primary-orange);font-weight:bold;margin-bottom:6px;">Site blocked iframe embedding</p>
+            <p style="color:var(--gray-text);font-size:0.85rem;margin-bottom:10px;">This site refuses to load inside an iframe. Use the button below to open it directly.</p>
+            <button class="btn" id="proxyOpenExternalBtn" onclick="openProxyExternal()" style="width:100%;"><i class="fas fa-external-link-alt"></i> Open in New Tab</button>
+          </div>
           <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">
             <button class="btn" onclick="openProxy('https://duckduckgo.com')" style="padding:12px 24px;font-size:1rem;"><i class="fas fa-search"></i> DuckDuckGo</button>
             <button class="btn" onclick="openProxy('https://www.google.com')" style="padding:12px 24px;font-size:1rem;"><i class="fab fa-google"></i> Google</button>
@@ -5981,7 +5986,16 @@
         }
       }
       if (home) home.style.display = 'none';
-      if (frame) { frame.style.display = 'block'; frame.src = url; }
+      if (frame) {
+        frame.style.display = 'block';
+        frame.src = url;
+        frame.onerror = function() {
+          frame.style.display = 'none';
+          if (home) home.style.display = 'flex';
+          const msg = document.getElementById('proxyErrorMsg');
+          if (msg) msg.style.display = 'block';
+        };
+      }
       if (input) input.value = url;
     }
 
@@ -6003,6 +6017,12 @@
     function openProxyFullscreen() {
       const frame = document.getElementById('proxyFrame');
       if (frame && frame.requestFullscreen) frame.requestFullscreen();
+    }
+
+    function openProxyExternal() {
+      const input = document.getElementById('proxyUrlInput');
+      const url = input?.value || '';
+      if (url) window.open(url, '_blank');
     }
 
     function closeProxy() {
