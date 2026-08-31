@@ -7886,12 +7886,22 @@
       <\/script>`;
     }
 
-    function injectFreezeHarnessIntoHtml(html) {
+    function injectFreezeHarnessIntoHtml(html, sourceUrl) {
       if (!html || typeof html !== 'string') return html;
       const harness = getGameFreezeHarnessScript();
+      let assetBase = '';
+
+      if (sourceUrl) {
+        try {
+          const baseUrl = new URL('.', sourceUrl).href;
+          assetBase = `<base href="${baseUrl.replace(/&/g, '&amp;').replace(/"/g, '&quot;')}">`;
+        } catch (error) {
+          assetBase = '';
+        }
+      }
 
       if (/<head[^>]*>/i.test(html)) {
-        return html.replace(/<head[^>]*>/i, match => `${match}\n${harness}`);
+        return html.replace(/<head[^>]*>/i, match => `${match}\n${assetBase}\n${harness}`);
       }
 
       if (/<body[^>]*>/i.test(html)) {
@@ -8057,9 +8067,6 @@
         } else if (isAfterspaceGame || isTruffledGame) {
           // These hosts serve complete pages; load them directly inside the game tab.
           if (liveTab.loadToken === loadToken) liveTab.frame.src = gameUrl;
-        } else if (isRemoteGame) {
-          // Do not fetch arbitrary remote games first: CORS often leaves the loading screen stuck.
-          if (liveTab.loadToken === loadToken) liveTab.frame.src = gameUrl;
         } else if (isJsDelivrFile || isHtmlFile) {
           fetch(gameUrl)
             .then(response => {
@@ -8071,7 +8078,7 @@
             .then(html => {
               const currentTab = getGameTabById(tabId);
               if (currentTab && currentTab.loadToken === loadToken) {
-                currentTab.frame.srcdoc = injectFreezeHarnessIntoHtml(html);
+                currentTab.frame.srcdoc = injectFreezeHarnessIntoHtml(html, gameUrl);
               }
             })
             .catch(error => {
@@ -8079,6 +8086,8 @@
               const currentTab = getGameTabById(tabId);
               if (currentTab && currentTab.loadToken === loadToken) currentTab.frame.srcdoc = createSimpleIframeWrapper(gameUrl);
             });
+        } else if (isRemoteGame) {
+          if (liveTab.loadToken === loadToken) liveTab.frame.src = gameUrl;
         } else {
           if (liveTab.loadToken === loadToken) {
             liveTab.frame.srcdoc = createSimpleIframeWrapper(gameUrl);
