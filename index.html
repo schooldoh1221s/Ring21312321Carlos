@@ -7980,6 +7980,7 @@
       frame.dataset.tabId = tabId;
       frame.setAttribute('frameborder', '0');
       frame.setAttribute('name', tabId);
+      frame.setAttribute('allow', 'autoplay; fullscreen; encrypted-media; picture-in-picture');
       frame.src = 'about:blank';
 
       const tab = {
@@ -8044,6 +8045,12 @@
       const tabId = tab.id;
       tab.suspended = false;
       tab.frame.src = 'about:blank';
+
+      if (tab.isMedia) {
+        tab.frame.src = tab.url || 'about:blank';
+        return;
+      }
+
       tab.frame.srcdoc = createGameLoadingScreen(tab.title);
 
       tab.loadingTimer = setTimeout(() => {
@@ -8062,9 +8069,7 @@
           gameUrl.includes('cdn.jsdelivr.net') ||
           gameUrl.includes('rawcdn.githack.com');
 
-        if (liveTab.isMedia) {
-          if (liveTab.loadToken === loadToken) liveTab.frame.src = gameUrl;
-        } else if (isAfterspaceGame || isTruffledGame) {
+        if (isAfterspaceGame || isTruffledGame) {
           // These hosts serve complete pages; load them directly inside the game tab.
           if (liveTab.loadToken === loadToken) liveTab.frame.src = gameUrl;
         } else if (isJsDelivrFile || isHtmlFile) {
