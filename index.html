@@ -7954,6 +7954,80 @@
       resumeGameTab(target);
     }
 
+    function createExternalGameFallback(title, url) {
+      const safeTitle = String(title || 'Game')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+      const safeUrl = String(url || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+      return `<!DOCTYPE html>
+        <html>
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>${safeTitle}</title>
+            <style>
+              html, body {
+                margin: 0;
+                min-height: 100vh;
+                display: grid;
+                place-items: center;
+                background: #090909;
+                color: #f7f7f7;
+                font-family: Arial, sans-serif;
+              }
+              .fallback {
+                max-width: 620px;
+                width: min(90vw, 620px);
+                background: rgba(20, 20, 20, 0.88);
+                border: 1px solid rgba(194, 124, 21, 0.55);
+                box-shadow: 0 0 30px rgba(194, 124, 21, 0.25);
+                border-radius: 16px;
+                padding: 28px 24px;
+                text-align: center;
+              }
+              h2 { margin: 0 0 12px; }
+              p { margin: 0 0 18px; line-height: 1.5; color: #d4d4d4; }
+              .actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+              a, button {
+                appearance: none;
+                border: none;
+                border-radius: 10px;
+                padding: 12px 18px;
+                font-weight: 700;
+                cursor: pointer;
+                text-decoration: none;
+                color: #111;
+                background: linear-gradient(135deg, #f4b347, #c27c15);
+              }
+              a { display: inline-block; }
+            </style>
+          </head>
+          <body>
+            <div class="fallback">
+              <h2>${safeTitle}</h2>
+              <p>This game is hosted on a site that blocks in-page embedding, so it can’t be played inside the tab. Open it in a new tab to keep playing.</p>
+              <div class="actions">
+                <a href="${safeUrl}" target="_blank" rel="noopener noreferrer">Open game</a>
+                <button type="button" onclick="location.reload()">Retry</button>
+              </div>
+            </div>
+          </body>
+        </html>`;
+    }
+
+    function openGameInNewTab(title, url) {
+      if (!url) return false;
+      try {
+        const popup = window.open(url, '_blank', 'noopener,noreferrer');
+        return !!popup;
+      } catch (error) {
+        return false;
+      }
+    }
+
     function createGameTab(title, url) {
       const shell = getGameShellElements();
       if (!shell.tabsStrip || !shell.views) return null;
@@ -8087,12 +8161,24 @@
               }
             })
             .catch(error => {
-              console.log('Fetch failed, using simple iframe:', error);
+              console.log('Fetch failed, using fallback:', error);
               const currentTab = getGameTabById(tabId);
-              if (currentTab && currentTab.loadToken === loadToken) currentTab.frame.srcdoc = createSimpleIframeWrapper(gameUrl);
+              if (currentTab && currentTab.loadToken === loadToken) {
+                currentTab.frame.srcdoc = createExternalGameFallback(currentTab.title, gameUrl);
+                if (!openGameInNewTab(currentTab.title, gameUrl)) {
+                  currentTab.frame.srcdoc = createExternalGameFallback(currentTab.title, gameUrl);
+                }
+              }
             });
         } else if (isRemoteGame) {
-          if (liveTab.loadToken === loadToken) liveTab.frame.src = gameUrl;
+          try {
+            if (liveTab.loadToken === loadToken) liveTab.frame.src = gameUrl;
+          } catch (error) {
+            const currentTab = getGameTabById(tabId);
+            if (currentTab && currentTab.loadToken === loadToken) {
+              currentTab.frame.srcdoc = createExternalGameFallback(currentTab.title, gameUrl);
+            }
+          }
         } else {
           if (liveTab.loadToken === loadToken) {
             liveTab.frame.srcdoc = createSimpleIframeWrapper(gameUrl);
