@@ -3880,6 +3880,7 @@
         <div class="hub-tool-card"><h3><i class="fas fa-calculator"></i> Calculator</h3><label for="toolCalc">Try a basic expression</label><input class="hub-tool-input" id="toolCalc" placeholder="12 * 4 + 6"><button class="hub-action" type="button" onclick="calculateHubExpression()">Calculate</button><div class="hub-tool-result" id="toolCalcResult"></div></div>
         <div class="hub-tool-card"><h3><i class="fas fa-stopwatch"></i> Focus timer</h3><label>25-minute study sprint</label><button class="hub-action" type="button" id="focusTimerBtn" onclick="toggleFocusTimer()">Start timer</button><div class="hub-tool-result" id="focusTimerResult">25:00</div></div>
         <div class="hub-tool-card"><h3><i class="fas fa-note-sticky"></i> Quick notes</h3><label for="hubNotes">Saved locally in this browser</label><textarea class="hub-tool-input" id="hubNotes" rows="3" placeholder="Write something..."></textarea><button class="hub-action" type="button" onclick="saveHubNotes()">Save notes</button><div class="hub-tool-result" id="hubNotesResult"></div></div>
+        <div class="hub-tool-card"><h3><i class="fas fa-bug"></i> Fix status log</h3><label for="devLogTitle">Issue title</label><input class="hub-tool-input" id="devLogTitle" placeholder="e.g. Game load freeze"><label for="devLogStatus">Status</label><select class="hub-tool-input" id="devLogStatus"><option>Investigating</option><option>Reproduced</option><option>Patch in progress</option><option>Fix tested</option><option>Waiting on host</option><option>Resolved</option></select><label for="devLogNotes">Notes</label><textarea class="hub-tool-input" id="devLogNotes" rows="3" placeholder="Describe the bug, host, and symptoms..."></textarea><div class="hub-action-row"><button class="hub-action" type="button" onclick="saveDevLogEntry()">Add entry</button><button class="hub-action secondary" type="button" onclick="clearDevLogEntries()">Clear log</button></div><div class="hub-tool-result" id="devLogResult"></div><pre class="hub-tool-output" id="devLogOutput">No issue entries yet.</pre></div>
       </div>
     </section>
     <section id="apps-section" style="display:none">
@@ -5925,9 +5926,78 @@
       document.getElementById('hubNotesResult').textContent = 'Saved locally';
     }
 
+    function getDevLogEntries() {
+      try {
+        return JSON.parse(localStorage.getItem('shadowGardenDevLog') || '[]');
+      } catch (error) {
+        return [];
+      }
+    }
+
+    function saveDevLogEntries(entries) {
+      localStorage.setItem('shadowGardenDevLog', JSON.stringify(entries));
+    }
+
+    function renderDevLogEntries() {
+      const output = document.getElementById('devLogOutput');
+      if (!output) return;
+      const entries = getDevLogEntries();
+      if (!entries.length) {
+        output.textContent = 'No issue entries yet.';
+        return;
+      }
+      output.textContent = entries.map(entry => {
+        const stamp = new Date(entry.time || Date.now()).toLocaleString();
+        const gameLine = entry.game ? `Game: ${entry.game}` : 'Game: n/a';
+        const title = entry.title || 'Issue';
+        return `[$${stamp}] ${title} — ${entry.status || 'Unknown'}\n${gameLine}\n${entry.notes || 'No notes.'}`;
+      }).join('\n\n');
+    }
+
+    function saveDevLogEntry() {
+      const titleInput = document.getElementById('devLogTitle');
+      const statusInput = document.getElementById('devLogStatus');
+      const notesInput = document.getElementById('devLogNotes');
+      const result = document.getElementById('devLogResult');
+      const title = (titleInput?.value || '').trim();
+      const status = statusInput?.value || 'Investigating';
+      const notes = (notesInput?.value || '').trim();
+      if (!title && !notes) {
+        if (result) result.textContent = 'Add a title or notes before saving.';
+        return;
+      }
+      const entries = getDevLogEntries();
+      entries.unshift({
+        title: title || 'Issue update',
+        status,
+        notes: notes || 'No extra notes.',
+        game: getActiveGameTab()?.title || 'n/a',
+        time: Date.now()
+      });
+      saveDevLogEntries(entries.slice(0, 20));
+      if (titleInput) titleInput.value = '';
+      if (notesInput) notesInput.value = '';
+      if (result) result.textContent = 'Saved to local issue log';
+      renderDevLogEntries();
+    }
+
+    function clearDevLogEntries() {
+      saveDevLogEntries([]);
+      if (document.getElementById('devLogResult')) document.getElementById('devLogResult').textContent = 'Issue log cleared';
+      renderDevLogEntries();
+    }
+
+    function addDevLogIssue(title, status, notes, gameName) {
+      const entries = getDevLogEntries();
+      entries.unshift({ title, status, notes, game: gameName || getActiveGameTab()?.title || 'n/a', time: Date.now() });
+      saveDevLogEntries(entries.slice(0, 20));
+      renderDevLogEntries();
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       const notes = localStorage.getItem('shadowGardenNotes');
       if (notes) document.getElementById('hubNotes').value = notes;
+      renderDevLogEntries();
       const count = document.getElementById('hubGameCount');
       if (count && typeof games !== 'undefined') count.textContent = games.length;
       const favoriteCount = document.getElementById('hubFavoriteCount');
@@ -8028,6 +8098,39 @@
       }
     }
 
+    function triggerGameFallback(tab, url) {
+      if (!tab || !tab.frame) return;
+      const fallbackUrl = url || tab.url || '';
+      tab.frame.srcdoc = createExternalGameFallback(tab.title, fallbackUrl);
+      if (fallbackUrl) {
+        try {
+          window.open(fallbackUrl, '_blank', 'noopener,noreferrer');
+        } catch (error) {
+          // Ignore popup blockers; the fallback page still gives the user a way to retry.
+        }
+      }
+    }
+
+    function detectBlankGameFrame(tab, url) {
+      if (!tab || !tab.frame) return false;
+      try {
+        const frameWindow = tab.frame.contentWindow;
+        const frameDoc = tab.frame.contentDocument || (frameWindow && frameWindow.document);
+        const href = frameWindow && frameWindow.location ? frameWindow.location.href : '';
+        const bodyText = frameDoc && frameDoc.body ? (frameDoc.body.innerText || frameDoc.body.textContent || '') : '';
+        const html = frameDoc && frameDoc.documentElement ? (frameDoc.documentElement.innerHTML || '') : '';
+        const isBlank = !href || href === 'about:blank' || !bodyText.trim() && (!html || html.trim().length < 120);
+        if (isBlank) {
+          triggerGameFallback(tab, url);
+          return true;
+        }
+      } catch (error) {
+        triggerGameFallback(tab, url);
+        return true;
+      }
+      return false;
+    }
+
     function createGameTab(title, url) {
       const shell = getGameShellElements();
       if (!shell.tabsStrip || !shell.views) return null;
@@ -8081,6 +8184,12 @@
             }
           } catch (_) { /* cross-origin frames cannot be inspected */ }
         }
+
+        setTimeout(() => {
+          if (liveTab && liveTab.frame && liveTab.url) {
+            detectBlankGameFrame(liveTab, liveTab.url);
+          }
+        }, 1200);
       });
 
       button.addEventListener('click', (event) => {
@@ -8132,8 +8241,6 @@
         if (!liveTab || !liveTab.frame || liveTab.loadToken !== loadToken) return;
 
         const gameUrl = liveTab.url || '';
-        // Keep the loading screen visible briefly, then navigate to the actual game.
-        // If this title is media, use the same embedded navigation path.
         const isAfterspaceGame = gameUrl.includes('afterspace-cadear.web.app');
         const isTruffledGame = gameUrl.includes('truffled.lol');
         const isRemoteGame = /^https?:\/\//i.test(gameUrl);
@@ -8144,7 +8251,6 @@
           gameUrl.includes('rawcdn.githack.com');
 
         if (isAfterspaceGame || isTruffledGame) {
-          // These hosts serve complete pages; load them directly inside the game tab.
           if (liveTab.loadToken === loadToken) liveTab.frame.src = gameUrl;
         } else if (isJsDelivrFile || isHtmlFile) {
           fetch(gameUrl)
@@ -8158,33 +8264,36 @@
               const currentTab = getGameTabById(tabId);
               if (currentTab && currentTab.loadToken === loadToken) {
                 currentTab.frame.srcdoc = injectFreezeHarnessIntoHtml(html, gameUrl);
+                setTimeout(() => detectBlankGameFrame(currentTab, gameUrl), 1500);
               }
             })
             .catch(error => {
               console.log('Fetch failed, using fallback:', error);
               const currentTab = getGameTabById(tabId);
               if (currentTab && currentTab.loadToken === loadToken) {
-                currentTab.frame.srcdoc = createExternalGameFallback(currentTab.title, gameUrl);
-                if (!openGameInNewTab(currentTab.title, gameUrl)) {
-                  currentTab.frame.srcdoc = createExternalGameFallback(currentTab.title, gameUrl);
-                }
+                triggerGameFallback(currentTab, gameUrl);
+                openGameInNewTab(currentTab.title, gameUrl);
               }
             });
         } else if (isRemoteGame) {
           try {
-            if (liveTab.loadToken === loadToken) liveTab.frame.src = gameUrl;
+            if (liveTab.loadToken === loadToken) {
+              liveTab.frame.src = gameUrl;
+              setTimeout(() => detectBlankGameFrame(liveTab, gameUrl), 1500);
+            }
           } catch (error) {
             const currentTab = getGameTabById(tabId);
             if (currentTab && currentTab.loadToken === loadToken) {
-              currentTab.frame.srcdoc = createExternalGameFallback(currentTab.title, gameUrl);
+              triggerGameFallback(currentTab, gameUrl);
             }
           }
         } else {
           if (liveTab.loadToken === loadToken) {
             liveTab.frame.srcdoc = createSimpleIframeWrapper(gameUrl);
+            setTimeout(() => detectBlankGameFrame(liveTab, gameUrl), 1500);
           }
         }
-      }, 3000);
+      }, 1200);
     }
 
     function openGameDetailModal(game) {
